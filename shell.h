@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
 
 #ifndef BUFSIZE
 #define BUFSIZE 1024
