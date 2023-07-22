@@ -12,11 +12,16 @@
 #define INTERACTIVE 1
 #define NOT_INTERACTIVE 0
 
+extern char **environ;
+
 int shell(char *shname, int isinteractv);
 int endline(char *line, int newlipos);
 char **splitcmd(char *cmd);
-void freewords(char **words, char *firstbyte);
 char *cpystr(char *s);
 int wordscount(char *cmd);
+int ispath(char *prgname);
+char *getprgpath(char *prgname);
+char *makeprgpath(char *path, char *prgname);
+char *getenval(char *envname);
 #endif
 
