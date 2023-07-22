@@ -10,12 +10,12 @@
  * Return: 0 on success
  */
 
-int execprg(char **argv, char *shname, int isinteractv)
+int execprg(char **argv, char *shname, int isinteractv, int isexist)
 {
 	pid_t childpid = 0;
 	int status;
 
-	if (isinteractv)
+	if (isinteractv && isexist)
 	{
 		childpid = fork();
 		if (childpid == -1)
@@ -50,13 +50,14 @@ int execprg(char **argv, char *shname, int isinteractv)
 
 int shell(char *shname, int isinteractv)
 {
-	int readbytes, i = 1;
+	int readbytes, i = 1, isexist;
 	char **argv = NULL, *prgpath = NULL, buf[BUFSIZE];
 
 	if (isinteractv)
 		write(STDOUT_FILENO, "#wish$ ", 7);
 	while ((readbytes = read(STDIN_FILENO, buf, BUFSIZE)) > 0)
 	{
+		isexist = 1;
 		if (readbytes == 1 && isinteractv)
 		{
 			write(STDOUT_FILENO, "#wish$ ", 7);
@@ -76,9 +77,12 @@ int shell(char *shname, int isinteractv)
 				prgpath = getprgpath(argv[0]);
 				if (prgpath)
 					argv[0] = prgpath;
+				else
+					isexist = 0;
 			}
-			if (execprg(argv, shname, isinteractv) == -1)
-				exit(EXIT_FAILURE);
+			execprg(argv, shname, isinteractv, isexist);
+			/*if (execprg(argv, shname, isinteractv, isexist) == -1)
+				exit(EXIT_FAILURE);*/
 			free(prgpath);
 			free(argv); /* = words in splitcmd - freed */
 		}
