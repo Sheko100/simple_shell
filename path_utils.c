@@ -23,18 +23,6 @@ int ispath(char *prgname)
 }
 
 /**
- * getenvpath - gets the PATH environemnt variable,
- * splits its value and return it as a NULL terminated array
- *
- * Return: a NULL terminated array of paths strings on success
- * NULL on failure
- */
-
-char **getenvpath(void)
-{
-}
-
-/**
  * getprgpath - checks if the program exists in any of the paths in
  * the PATH environment variable
  * @prgname: the programe name
