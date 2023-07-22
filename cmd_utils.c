@@ -3,6 +3,8 @@
 /**
  * endline - replaces the new line byte written by pushing the enter button
  * with a null byte
+ * @line: pointer to cmd line ends with \n
+ * @newlipos: the \n index position
  *
  * Return: 1 on success
  * 0 on failure
@@ -23,7 +25,6 @@ int endline(char *line, int newlipos)
 /**
  * splitcmd - splits the whole command to seperated words
  * @cmd: buffer conatins the command to split
- * @argv: array to fill it with the words
  *
  * Return: pointer to the first byte of words memory space
  */
@@ -60,7 +61,7 @@ char **splitcmd(char *cmd)
 /**
  * wordscount - counts the number of words seperated by
  * the specified delimeter
- * @cmd: pointer to the command line string
+ * @str: pointer to the command line string
  * @delim: array of char bytes to seperate the words
  *
  * Return: number of words in the command line
