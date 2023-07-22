@@ -6,6 +6,7 @@
  * @shname: the name of the shell
  * @isinteractv: either 0 or 1 to
  * detrmine which to create a child process or not
+ * @isexist: either 0 or 1 to detrmine if the program was found or not
  *
  * Return: 0 on success
  */
@@ -65,10 +66,7 @@ int shell(char *shname, int isinteractv)
 			continue;
 		}
 		if (!endline(buf, readbytes - 1))
-		{
-			perror("endline");
 			exit(EXIT_FAILURE);
-		}
 		argv = splitcmd(buf);
 		if (argv != NULL)
 		{
@@ -81,8 +79,6 @@ int shell(char *shname, int isinteractv)
 					isexist = 0;
 			}
 			execprg(argv, shname, isinteractv, isexist);
-			/*if (execprg(argv, shname, isinteractv, isexist) == -1)
-				exit(EXIT_FAILURE);*/
 			free(prgpath);
 			free(argv); /* = words in splitcmd - freed */
 		}
