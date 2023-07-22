@@ -28,7 +28,7 @@ int ispath(char *prgname)
  * @prgname: the programe name
  *
  * Return: pointer to the first path contains the program
- * NULL on failure
+ * NULL if the program not found in any path
  */
 
 char *getprgpath(char *prgname)
@@ -50,11 +50,13 @@ char *getprgpath(char *prgname)
 			{
 				prgpath = makeprgpath(path, prgname);/*to free*/
 				if (stat(prgpath, &info) == 0)
+				{
+					free(pathenv);
 					return (prgpath);
+				}
 				free(prgpath); /* = prgpath in makeprgpath*/
 				path = strtok(NULL, &delim);
 			}
-			/*paths[i] = NULL;*/
 		}
 	}
 		free(pathenv);

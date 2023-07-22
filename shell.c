@@ -79,6 +79,7 @@ int shell(char *shname, int isinteractv)
 			}
 			if (execprg(argv, shname, isinteractv) == -1)
 				exit(EXIT_FAILURE);
+			free(prgpath);
 			free(argv); /* = words in splitcmd - freed */
 		}
 		if (isinteractv)
