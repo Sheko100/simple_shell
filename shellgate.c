@@ -9,7 +9,7 @@
  * Return: 0 always
  */
 
-int main(int ac, char **av)
+int main(__attribute__ ((unused))int ac, char **av)
 {
 	if (isatty(STDIN_FILENO))
 	{
