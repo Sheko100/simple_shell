@@ -17,9 +17,12 @@
 extern char **environ;
 
 int shell(char *shname, int isinteractv);
+int isbuiltin(char **argv);
+int execprg(char **argv, char *shname, int isinteractv, int isexist);
 int endline(char *line, int newlipos);
 char **splitcmd(char *cmd);
 char *cpystr(char *s);
+int cmpstr(char *s1, char *s2);
 int wordscount(char *cmd, char delim[]);
 int ispath(char *prgname);
 char *getprgpath(char *prgname);
