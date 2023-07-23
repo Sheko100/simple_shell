@@ -31,17 +31,20 @@ int shell(char *shname, int isinteractv)
 		argv = splitcmd(buf);
 		if (argv != NULL)
 		{
-			if (ispath(argv[0]) == 0)
+			if (isbuiltin(argv) == 0)
 			{
-				prgpath = getprgpath(argv[0]);
-				if (prgpath)
-					argv[0] = prgpath;
-				else
-					isexist = 0;
+				if (ispath(argv[0]) == 0)
+				{
+					prgpath = getprgpath(argv[0]);
+					if (prgpath)
+						argv[0] = prgpath;
+					else
+						isexist = 0;
+				}
+				execprg(argv, shname, isinteractv, isexist);
+				free(prgpath);
+				free(argv); /* = words in splitcmd - freed */
 			}
-			execprg(argv, shname, isinteractv, isexist);
-			free(prgpath);
-			free(argv); /* = words in splitcmd - freed */
 		}
 		if (isinteractv)
 			write(STDOUT_FILENO, "#wish$ ", 7);
