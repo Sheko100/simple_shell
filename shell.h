@@ -18,6 +18,7 @@ extern char **environ;
 
 int shell(char *shname, int isinteractv);
 int isbuiltin(char **argv);
+int printenvs(void);
 int execprg(char **argv, char *shname, int isinteractv, int isexist);
 int endline(char *line, int newlipos);
 char **splitcmd(char *cmd);
