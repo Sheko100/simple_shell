@@ -17,7 +17,7 @@ int printenvs(void)
 	{
 		if (write(STDOUT_FILENO, *ep, strlen(*ep)) == -1)
 			return (-1);
-		if (write(STDOUT_FILENO, "\n", 2) == -1)
+		if (write(STDOUT_FILENO, "\n", 1) == -1)
 			return (-1);
 		ep++;
 	}
