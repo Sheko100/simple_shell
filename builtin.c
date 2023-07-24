@@ -15,7 +15,7 @@ int printenvs(void)
 
 	while (*ep)
 	{
-		if (write(STDOUT_FILENO, *ep, strlen(*ep)) == -1)
+		if (write(STDOUT_FILENO, *ep, lenstr(*ep)) == -1)
 			return (-1);
 		if (write(STDOUT_FILENO, "\n", 1) == -1)
 			return (-1);

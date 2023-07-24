@@ -12,7 +12,7 @@ char *cpystr(char *s)
 	char *newstr = NULL;
 	int len, i = 0;
 
-	len = strlen(s);
+	len = lenstr(s);
 	newstr = malloc(len + 1); /* need to be freed */
 	if (newstr == NULL)
 	{
@@ -51,4 +51,20 @@ int cmpstr(char *s1, char *s2)
 	}
 
 	return (1);
+}
+
+/**
+ * lenstr - Counts the length of the string excluding the null byte
+ * @s: pointer to a string
+ *
+ * Return: string length
+ */
+
+int lenstr(char *s)
+{
+	int len = 0;
+
+	while (s[len++]);
+
+	return (len - 1);
 }

@@ -76,8 +76,8 @@ char *makeprgpath(char *path, char *prgname)
 	char *prgpath = NULL, *strp = NULL;
 	int pathlen = 0, prgnamelen = 0, i = 0;
 
-	pathlen = strlen(path);
-	prgnamelen = strlen(prgname);
+	pathlen = lenstr(path);
+	prgnamelen = lenstr(prgname);
 	prgpath = malloc(pathlen + prgnamelen + 2);
 	if (prgpath == NULL)
 	{
