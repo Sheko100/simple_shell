@@ -18,8 +18,7 @@ int shell(char *shname, int isinteractv)
 	if (isinteractv)
 		write(STDOUT_FILENO, "#wish$ ", 7);
 	while ((readbytes = read(STDIN_FILENO, buf, BUFSIZE)) > 0)
-	{
-		isexist = 1;
+	{ isexist = 1;
 		if (readbytes == 1 && isinteractv)
 		{
 			write(STDOUT_FILENO, "#wish$ ", 7);
@@ -52,7 +51,6 @@ int shell(char *shname, int isinteractv)
 	}
 	if (isinteractv)
 		write(STDOUT_FILENO, "\n", 1);
-
 	return (0);
 }
 
