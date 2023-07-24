@@ -43,8 +43,8 @@ int shell(char *shname, int isinteractv)
 				}
 				execprg(argv, shname, isinteractv, isexist);
 				free(prgpath);
-				free(argv); /* = words in splitcmd - freed */
 			}
+			free(argv); /* = words in splitcmd - freed */
 		}
 		if (isinteractv)
 			write(STDOUT_FILENO, "#wish$ ", 7);
@@ -113,6 +113,11 @@ int isbuiltin(char **argv)
 	{
 		free(argv);
 		exit(EXIT_SUCCESS);
+	}
+	else if (cmpstr(cmd, "env"))
+	{
+		status = 1;
+		printenvs();
 	}
 
 	return (status);
