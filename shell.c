@@ -78,21 +78,27 @@ int execprg(char **argv, char *shname, int isinteractv, int isexist)
 			perror("Creating child process");
 			exit(EXIT_FAILURE);
 		}
+
+		if (childpid == 0)
+		{
+			execve(argv[0], argv, environ);
+			free(argv);
+			perror(shname);
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			if (wait(&status) != -1)
+			{
+				return (0);
+			}
+			perror("wait");
+		}
 	}
 
-	if (childpid == 0)
-		execve(argv[0], argv, environ);
-	else
-	{
-		if (wait(&status) != -1)
-		{
-			return (0);
-		}
-		perror("wait");
-	}
+	execve(argv[0], argv, environ);
 	perror(shname);
-	free(argv);
-	exit(EXIT_FAILURE);
+
 	return (-1);
 }
 
