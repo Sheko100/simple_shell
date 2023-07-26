@@ -91,6 +91,7 @@ int execprg(char **argv, char *shname, int isinteractv, int isexist)
 		perror("wait");
 	}
 	perror(shname);
+	free(argv);
 	exit(EXIT_FAILURE);
 	return (-1);
 }
