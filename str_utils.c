@@ -67,5 +67,5 @@ int lenstr(char *s)
 	while (s[len])
 		len++;
 
-	return (len - 1);
+	return (len);
 }
