@@ -85,11 +85,13 @@ int execprg(char **argv, char *shname, int isinteractv, int isexist)
 	else
 	{
 		if (wait(&status) != -1)
+		{
 			return (0);
+		}
 		perror("wait");
 	}
-
 	perror(shname);
+	exit(EXIT_FAILURE);
 	return (-1);
 }
 
