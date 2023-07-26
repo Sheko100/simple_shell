@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 #ifndef BUFSIZE
-#define BUFSIZE 4096
+#define BUFSIZE 1024
 #endif
 
 #define INTERACTIVE 1
