@@ -14,7 +14,7 @@ int endline(char *line, int newlipos)
 {
 	int status = 1;
 
-	if (line[newlipos] == '\n')
+	if (line[newlipos] == '\n' || line[newlipos] == ' ')
 		line[newlipos] = '\0';
 	else
 		status = 0;
