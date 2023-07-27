@@ -12,13 +12,14 @@
 
 int shell(char *shname, int isinteractv)
 {
-	int readbytes, i = 1, isexist;
-	char **argv = NULL, *prgpath = NULL, buf[BUFSIZE];
+	int readbytes, l, i = 1, linescount = 0;
+	char buf[BUFSIZE];
+	char **lines = NULL, *line = NULL;
 
 	if (isinteractv)
 		write(STDOUT_FILENO, "#wish$ ", 7);
 	while ((readbytes = read(STDIN_FILENO, buf, BUFSIZE)) > 0)
-	{ isexist = 1;
+	{
 		if (readbytes == 1 && isinteractv)
 		{
 			write(STDOUT_FILENO, "#wish$ ", 7);
@@ -27,7 +28,53 @@ int shell(char *shname, int isinteractv)
 		}
 		if (!endline(buf, readbytes - 1))
 			exit(EXIT_FAILURE);
-		argv = splitcmd(buf);
+		linescount = wordscount(buf, "\n");
+		if (linescount > 0)
+			lines = malloc(sizeof(char *) * (linescount + 1));
+		if (lines == NULL)
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		l = 0;
+		line = strtok(buf, "\n");
+		while (line != NULL)
+		{
+			lines[l] = line;
+			line = strtok(NULL, "\n");
+			l++;
+		}
+		lines[l] = NULL;
+		interpretline(shname, lines, linescount, isinteractv);
+		free(lines);
+		if (isinteractv)
+			write(STDOUT_FILENO, "#wish$ ", 7);
+		i++;
+	}
+	if (isinteractv)
+		write(STDOUT_FILENO, "\n", 1);
+	return (0);
+}
+
+/**
+ * lineinterpreter - Interpretes line, splits it and try to execute it
+ * @shname: the name of the shell
+ * @buf: buffer to get the lines
+ * @linescount: the count of lines in the buffer
+ * @isinteractv: either 0 or 1 to detremine the mode
+ *
+ * Return: 0 on success
+ */
+
+int interpretline(char *shname, char **lines, int linescount, int isinteractv)
+{
+	char **argv = NULL, *prgpath = NULL;
+	int status, isexist = 1, i = 0, prgstatus = -1;
+	pid_t childpid = 0;
+
+	while (lines[i])
+	{
+		argv = splitcmd(lines[i]);
 		if (argv != NULL)
 		{
 			if (isbuiltin(argv) == 0)
@@ -40,17 +87,33 @@ int shell(char *shname, int isinteractv)
 					else
 						isexist = 0;
 				}
-				execprg(argv, shname, isinteractv, isexist);
+				if (linescount > 1)
+				{
+					childpid = fork();
+					if (childpid == 0)
+					{
+						execprg(argv, shname, isinteractv, isexist);
+						exit(EXIT_FAILURE);
+					}
+					else
+						wait(&status);
+				}
+				else
+				{
+					prgstatus = execprg(argv, shname, isinteractv, isexist);
+					if (prgstatus == -1)
+					{
+						free(argv);
+						free(lines);
+						exit(EXIT_FAILURE);
+					}
+				}
 				free(prgpath);
 			}
 			free(argv); /* = words in splitcmd - freed */
 		}
-		if (isinteractv)
-			write(STDOUT_FILENO, "#wish$ ", 7);
 		i++;
 	}
-	if (isinteractv)
-		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
 
