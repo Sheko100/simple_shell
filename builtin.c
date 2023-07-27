@@ -24,3 +24,17 @@ int printenvs(void)
 
 	return (1);
 }
+
+/**
+ * exitshell - exits process with specific status
+ * @argv: arguments values array
+ * @exitstatus: exit status code
+ *
+ * Return: void
+ */
+
+void exitshell(int exitstatus, char **argv)
+{
+	free(argv);
+	exit(exitstatus);
+}

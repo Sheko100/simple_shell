@@ -73,7 +73,7 @@ int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 	{ argv = splitcmd(lines[i]);
 		if (argv != NULL)
 		{
-			if (isbuiltin(argv, exitstatus) == 0)
+			if (isbuiltin(argv, lines, exitstatus) == 0)
 			{
 				if (ispath(argv[0]) == 0)
 				{
@@ -160,21 +160,22 @@ int execprg(char **argv, char *shname, int isinteractv, int isexist)
  * isbuiltin - checks if the command is a built-in and execute the associated
  * function
  * @argv: array of arguments strings
+ * @lines: array of lines to free in exit case
  * @exitstatus: exist status code
  *
  * Return: 1 if the command is a built-in
  * 0 otherwise
  */
 
-int isbuiltin(char **argv, int exitstatus)
+int isbuiltin(char **argv, char **lines, int exitstatus)
 {
 	int status = 0;
 	char *cmd = argv[0];
 
 	if (cmpstr(cmd, "exit"))
 	{
-		free(argv);
-		exit(exitstatus);
+		free(lines);
+		exitshell(exitstatus, argv);
 	}
 	else if (cmpstr(cmd, "env"))
 	{
