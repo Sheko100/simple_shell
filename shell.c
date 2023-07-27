@@ -67,13 +67,13 @@ int shell(char *shname, int isinteractv)
 int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 {
 	char **argv = NULL, *prgpath = NULL;
-	int status, isexist = 1, i = 0;
+	int status, isexist = 1, i = 0, exitstatus = 0;
 
 	while (lines[i])
 	{ argv = splitcmd(lines[i]);
 		if (argv != NULL)
 		{
-			if (isbuiltin(argv) == 0)
+			if (isbuiltin(argv, exitstatus) == 0)
 			{
 				if (ispath(argv[0]) == 0)
 				{
@@ -86,18 +86,18 @@ int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 				if (linescount > 1)
 				{
 					if (fork() == 0)
-					{
-						execprg(argv, shname, isinteractv, isexist);
+					{ execprg(argv, shname, isinteractv, isexist);
 						exit(EXIT_FAILURE);
 					}
 					else
-						wait(&status);
+					{ wait(&status);
+						exitstatus = WEXITSTATUS(status);
+					}
 				}
 				else
 				{
 					if (execprg(argv, shname, isinteractv, isexist) == -1)
-					{
-						free(argv);
+					{ free(argv);
 						free(lines);
 						exit(EXIT_FAILURE);
 					}
@@ -105,7 +105,7 @@ int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 			} free(argv); /* = words in splitcmd - freed */
 		} i++;
 	}
-	return (0);
+	return (exitstatus);
 }
 
 /**
@@ -160,12 +160,13 @@ int execprg(char **argv, char *shname, int isinteractv, int isexist)
  * isbuiltin - checks if the command is a built-in and execute the associated
  * function
  * @argv: array of arguments strings
+ * @exitstatus: exist status code
  *
  * Return: 1 if the command is a built-in
  * 0 otherwise
  */
 
-int isbuiltin(char **argv)
+int isbuiltin(char **argv, int exitstatus)
 {
 	int status = 0;
 	char *cmd = argv[0];
@@ -173,7 +174,7 @@ int isbuiltin(char **argv)
 	if (cmpstr(cmd, "exit"))
 	{
 		free(argv);
-		exit(EXIT_SUCCESS);
+		exit(exitstatus);
 	}
 	else if (cmpstr(cmd, "env"))
 	{

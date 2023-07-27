@@ -18,7 +18,7 @@ extern char **environ;
 
 int shell(char *shname, int isinteractv);
 int interpretline(char *shname, char **lines, int linescount, int isinteractv);
-int isbuiltin(char **argv);
+int isbuiltin(char **argv, int exitstatus);
 int printenvs(void);
 int execprg(char **argv, char *shname, int isinteractv, int isexist);
 int endline(char *line, int newlipos);
