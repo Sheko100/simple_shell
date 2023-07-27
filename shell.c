@@ -35,14 +35,12 @@ int shell(char *shname, int isinteractv)
 		{
 			perror("malloc");
 			exit(EXIT_FAILURE);
-		}
-		l = 0;
+		} l = 0;
 		line = strtok(buf, "\n");
 		while (line != NULL)
 		{
-			lines[l] = line;
+			lines[l++] = line;
 			line = strtok(NULL, "\n");
-			l++;
 		}
 		lines[l] = NULL;
 		interpretline(shname, lines, linescount, isinteractv);
@@ -57,10 +55,10 @@ int shell(char *shname, int isinteractv)
 }
 
 /**
- * lineinterpreter - Interpretes line, splits it and try to execute it
+ * interpretline - Interpretes line, splits it and try to execute it
  * @shname: the name of the shell
- * @buf: buffer to get the lines
- * @linescount: the count of lines in the buffer
+ * @lines: a NULL terminated array of lines
+ * @linescount: the count of lines
  * @isinteractv: either 0 or 1 to detremine the mode
  *
  * Return: 0 on success
@@ -69,12 +67,10 @@ int shell(char *shname, int isinteractv)
 int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 {
 	char **argv = NULL, *prgpath = NULL;
-	int status, isexist = 1, i = 0, prgstatus = -1;
-	pid_t childpid = 0;
+	int status, isexist = 1, i = 0;
 
 	while (lines[i])
-	{
-		argv = splitcmd(lines[i]);
+	{ argv = splitcmd(lines[i]);
 		if (argv != NULL)
 		{
 			if (isbuiltin(argv) == 0)
@@ -89,8 +85,7 @@ int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 				}
 				if (linescount > 1)
 				{
-					childpid = fork();
-					if (childpid == 0)
+					if (fork() == 0)
 					{
 						execprg(argv, shname, isinteractv, isexist);
 						exit(EXIT_FAILURE);
@@ -100,19 +95,15 @@ int interpretline(char *shname, char **lines, int linescount, int isinteractv)
 				}
 				else
 				{
-					prgstatus = execprg(argv, shname, isinteractv, isexist);
-					if (prgstatus == -1)
+					if (execprg(argv, shname, isinteractv, isexist) == -1)
 					{
 						free(argv);
 						free(lines);
 						exit(EXIT_FAILURE);
 					}
-				}
-				free(prgpath);
-			}
-			free(argv); /* = words in splitcmd - freed */
-		}
-		i++;
+				} free(prgpath);
+			} free(argv); /* = words in splitcmd - freed */
+		} i++;
 	}
 	return (0);
 }
